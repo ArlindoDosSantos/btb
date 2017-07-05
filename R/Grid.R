@@ -16,10 +16,6 @@
 #
 ##########################################################################################
 
-library(sf)
-library(profvis)
-# profvis({
-
 #' @useDynLib btb
 #' @importFrom Rcpp evalCpp
 #' @import methods sp
@@ -97,49 +93,24 @@ setMethod(
 # fonction pour transformer un lissage en un fond de carte
 #' @export
 smoothingToGrid <- function(grid, epsg, fUpdateProgress = NULL)
-  # grid = dfResultat
-  # epsg = "2154"
-  # cellSize = 200L
-  # fUpdateProgress = NULL
 {
+
   if (is.null(fUpdateProgress))
   {
     # version optimisee sans compte-rendu d'avancement du traitement
-    # carreauSpeed <- function(x, y, cellSize) 
-    # {
-    #   sp::Polygons(list(sp::Polygon(
-    #     cbind(
-    #       c(0, cellSize, cellSize, 0, 0) + x - cellSize / 2,
-    #       c(0, 0, cellSize, cellSize, 0) + y - cellSize / 2
-    #     )
-    #   )
-    #   ), paste(x, y, sep = "_")
-    #   )
-    # }
-    # 
-    # grille <- mapply(carreauSpeed, grid[, "x"], grid[, "y"], MoreArgs = list(grid@cellSize))
-    
-    # v Benoit
-    carreau <- function(x, y, cellSize)
+    carreauSpeed <- function(x, y, cellSize) 
     {
-      demiPas <- cellSize / 2
-      res <- list(matrix(c(x - demiPas, x + demiPas, x + demiPas, x - demiPas, x - demiPas, y + demiPas, y + demiPas, y - demiPas, y - demiPas, y + demiPas), 5, 2))
-      attributes(res) <- attributes(sf::st_polygon(list(rbind(  c(cellSize - demiPas, 6 + demiPas)
-                                                              , c(cellSize + demiPas, 6 + demiPas)
-                                                              , c(cellSize + demiPas, 6 - demiPas)
-                                                              , c(cellSize - demiPas, 6 - demiPas)
-                                                              , c(cellSize - demiPas, 6 + demiPas)))))
-      return(res)
+      sp::Polygons(list(sp::Polygon(
+        cbind(
+          c(0, cellSize, cellSize, 0, 0) + x - cellSize / 2,
+          c(0, 0, cellSize, cellSize, 0) + y - cellSize / 2
+        )
+      )
+      ), paste(x, y, sep = "_")
+      )
     }
     
-    if (Sys.info()[['sysname']] == "Windows") 
-      nbCores <- 1
-    else 
-      nbCores <- parallel::detectCores() - 1
-
-    temp <- parallel::mcmapply(carreau, grid[, "x"], grid[,"y"], MoreArgs = list(grid@cellSize), SIMPLIFY = F, mc.cores = nbCores)
-    temp <- sf::st_sfc(temp)
-    grille <- sf::st_set_crs(temp, epsg)
+    grille <- mapply(carreauSpeed, grid[, "x"], grid[, "y"], MoreArgs = list(grid@cellSize))
   }
   else
   {
@@ -150,7 +121,8 @@ smoothingToGrid <- function(grid, epsg, fUpdateProgress = NULL)
       if (i == n)
       {# traitement du dernier polygone
         dTempsPasse = Sys.time() - startTime
-        message <- paste0("Grid progress: ", ceiling(i / n * 100), "% - Elapsed time: ", floor(as.numeric(dTempsPasse, units = "mins") / 60), "m ", floor(as.numeric(dTempsPasse, units = "secs")) %% 60, "s   ")
+        message <- paste0("\rGrid progress: ", ceiling(i / n * 100), "% - Elapsed time: ", floor(as.numeric(dTempsPasse, units = "mins") / 60), "m ", floor(as.numeric(dTempsPasse, units = "secs")) %% 60, "s   ")
+        cat(message)
         fUpdateProgress(100, message)
       }
       else if (i %% floor( n / 100) == 0)
@@ -159,7 +131,8 @@ smoothingToGrid <- function(grid, epsg, fUpdateProgress = NULL)
         dTempsPasse = Sys.time() - startTime
         dTempsTotal <- dTempsPasse * 100 / iPourcentageEffectue;
         iTempsRestant <- ceiling(dTempsTotal - dTempsPasse);
-        message <- paste0("Grid progress: ", iPourcentageEffectue, "% - remaining time: ", floor(as.numeric(iTempsRestant, units = "mins") / 60), "m ", as.numeric(iTempsRestant, units = "secs") %% 60, "s   ")
+        message <- paste0("\rGrid progress: ", iPourcentageEffectue, "% - remaining time: ", floor(as.numeric(iTempsRestant, units = "mins") / 60), "m ", as.numeric(iTempsRestant, units = "secs") %% 60, "s   ")
+        cat(message)
         fUpdateProgress(iPourcentageEffectue, message)
       }
       
@@ -173,8 +146,10 @@ smoothingToGrid <- function(grid, epsg, fUpdateProgress = NULL)
       )
     }
     
+    cat("\n")
     dateDebutTraitement <- Sys.time()
     grille <- lapply(1:nrow(grid), carreauSlow, grid, length(grid@.Data[[1]]), fUpdateProgress, dateDebutTraitement)
+    cat("\n")
   }
 
   # on crée un spatial polygon avec un code epsg de projection defini
@@ -204,7 +179,6 @@ smoothingToGrid <- function(grid, epsg, fUpdateProgress = NULL)
 # un objet Grid dont le slot @data contient la valeur des variables lissees
 # 
 #' @export
-
 kernelSmoothing <-
   function(dfObservations
           , cellSize
@@ -214,22 +188,12 @@ kernelSmoothing <-
           , fUpdateProgress = NULL
           , neighbor = NULL
   )
-
-# dfObservations = dfBase
-# cellSize = 200
-# bandwidth = 400
-# vQuantiles = NULL
-# dfCentroids = NULL
-# fUpdateProgress = NULL
-# neighbor = NULL
   {
-    dateDebut <- Sys.time()
-      
     cellSize <- as.integer(cellSize)
     bandwidth <- as.integer(bandwidth)
     dRayonMinimum <- cellSize * sqrt(2) / 2
     
-    if (is.null(neighbor))
+    if(is.null(neighbor))
     {
       if (is.null(dfCentroids)) 
         neighbor <- max(0, ceiling(bandwidth / cellSize / 2L) - 1L) 
@@ -276,8 +240,8 @@ kernelSmoothing <-
     if (is.null(dfCentroids))
     { 
       # calcul de l'indice des observations - on prend le rectangle englobant et on positionne le debut de la numérotation sur la première observation
-      dfObservations[, "i"] <- as.integer(floor((dfObservations$x - xOffset[1]) / cellSize) - floor(min(dfObservations$x / cellSize)) + 1)
-      dfObservations[, "j"] <- as.integer(floor((dfObservations$y - yOffset[1]) / cellSize) - floor(min(dfObservations$y / cellSize)) + 1)
+      dfObservations$i <- as.integer(floor((dfObservations$x - xOffset[1]) / cellSize) - floor(min(dfObservations$x / cellSize)) + 1)
+      dfObservations$j <- as.integer(floor((dfObservations$y - yOffset[1]) / cellSize) - floor(min(dfObservations$y / cellSize)) + 1)
       
       # calcul des centroides
       dfCentroids <- data.frame( x = as.integer(floor(dfObservations$x / cellSize) * cellSize + (cellSize / 2)),
@@ -321,12 +285,12 @@ kernelSmoothing <-
       indiceMinX <- floor(min(obsEtCentroides$x / cellSize))
       indiceMinY <- floor(min(obsEtCentroides$y / cellSize))
         
-      dfObservations[, "i"] <- as.integer(floor((dfObservations$x - xOffset[1]) / cellSize) - indiceMinX + 1)
-      dfObservations[, "j"] <- as.integer(floor((dfObservations$y - yOffset[1]) / cellSize) - indiceMinY + 1)
+      dfObservations$i <- as.integer(floor((dfObservations$x - xOffset[1]) / cellSize) - indiceMinX + 1)
+      dfObservations$j <- as.integer(floor((dfObservations$y - yOffset[1]) / cellSize) - indiceMinY + 1)
       
       # calcul de l'indice des centroides
-      dfCentroids[, "i"] <- as.integer(floor(dfCentroids$x / cellSize) - indiceMinX + 1)
-      dfCentroids[, "j"] <- as.integer(floor(dfCentroids$y / cellSize) - indiceMinY + 1)
+      dfCentroids$i <- as.integer(floor(dfCentroids$x / cellSize) - indiceMinX + 1)
+      dfCentroids$j <- as.integer(floor(dfCentroids$y / cellSize) - indiceMinY + 1)
       dfCentroidesUniques <- dfCentroids
     }
       
@@ -336,7 +300,7 @@ kernelSmoothing <-
     if (is.null(vQuantiles))
     {
       # numérotation des centroides - décalage de -1 pour faire commencer la numerotation des lignes à 0 pour le traitement c++
-      dfCentroidesUniques[, "index"] <- (1:nrow(dfCentroidesUniques)) - 1L
+      dfCentroidesUniques$index <- (1:nrow(dfCentroidesUniques)) - 1L
       
       # transformation en matrice
       mXcentroides = mIcentroides = mYcentroides = matrix(NA, max(dfCentroidesUniques$j), max(dfCentroidesUniques$i))
@@ -346,10 +310,6 @@ kernelSmoothing <-
       
       iNbCentroidesUniques <- nrow(dfCentroidesUniques)
       dfResultat <- data.frame(dfCentroidesUniques[, c("x", "y")])
-      
-      cat("\n durée: ", Sys.time() - dateDebut, "\n")
-      
-      dateDebut <- Sys.time()
       
       mVariablesLissees <- rcppLissage(
           dfObservations$x
@@ -366,8 +326,6 @@ kernelSmoothing <-
         , iNbCentroidesUniques
         , fUpdateProgress
       )
-
-      cat("\n durée rcppLissage: ", Sys.time() - dateDebut, "\n")
       
       rm(list = c("dfObservations", "mXcentroides", "mYcentroides", "mIcentroides"))
       
@@ -406,5 +364,3 @@ kernelSmoothing <-
       return(new(Class = "Grid", dfResultat, cellSize = cellSize, bandwidth = bandwidth))
     }
   }
-
-# })

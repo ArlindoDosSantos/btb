@@ -53,7 +53,6 @@ NumericMatrix rcppLissage(
   int iTempsRestant = 0;
   int iPourcentageEffectue;
   int iPourcentageEffectuePrecedent = 0;
-  std::stringstream message;
   // fin benchmark
 
   int i, j;
@@ -129,23 +128,19 @@ NumericMatrix rcppLissage(
       dTempsTotal = dTempsPasse * 100 / iPourcentageEffectue;
       iTempsRestant = ceil(dTempsTotal - dTempsPasse);
       iPourcentageEffectuePrecedent = iPourcentageEffectue;
-      message.str("");
-      message << "Smoothing progress: " << iPourcentageEffectue << "% - minimum remaining time: " << (iTempsRestant / 60) << "m " << (iTempsRestant % 60) << "s";
+      std::stringstream message;
+      message << "\rSmoothing progress: " << iPourcentageEffectue << "% - minimum remaining time: " << (iTempsRestant / 60) << "m " << (iTempsRestant % 60) << "s";
+      // if(updateProgress != NULL)
+      //   updateProgress(iPourcentageEffectue, message.str());
       if(updateProgress.isNotNull())
         as<Function>(updateProgress)(iPourcentageEffectue, message.str());
-      else
-        Rcpp::Rcout << "\r" << message.str();
+      Rcpp::Rcout << message.str();
     }
     // fin benchmark
   }
 
   // debut benchmark
-  message.str("");
-  message << "Smoothing duration: " << floor(dTempsTotal / 60) << "m " << ((int)dTempsTotal % 60) << "s                                                                                           ";
-  if(updateProgress.isNotNull())
-    as<Function>(updateProgress)(iPourcentageEffectue, message.str());
-  else
-    Rcpp::Rcout << "\n" << message.str();
+  Rcpp::Rcout << "\rElapsed time smoothing: " << floor(dTempsTotal / 60) << "m " << ((int)dTempsTotal % 60) << "s                                                                                           ";
   // fin benchmark
   
   return(mVariablesLissees);

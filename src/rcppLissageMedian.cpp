@@ -156,7 +156,6 @@ NumericMatrix rcppLissageMedianSort(
   int iTempsRestant = 0;
   int iPourcentageEffectue;
   int iPourcentageEffectuePrecedent = 0;
-  std::stringstream message;
   // fin benchmark
   
   int i;
@@ -196,7 +195,7 @@ NumericMatrix rcppLissageMedianSort(
 
     if(vIndiceObservations.length() > 0)
     {
-      mValeursMedianes(iIndiceCentroide, 0) = vIndiceObservations.length(); /* nb obs ayant servi à calculer les quantiles */
+      mValeursMedianes(iIndiceCentroide, 0) = vIndiceObservations.length();
       for (iVarCourante = 0; iVarCourante < iNbVars; ++iVarCourante) /* pour chacune des variables a lisser */
       {
         NumericVector vModalites;
@@ -216,23 +215,19 @@ NumericMatrix rcppLissageMedianSort(
       dTempsTotal = dTempsPasse * 100 / iPourcentageEffectue;
       iTempsRestant = ceil(dTempsTotal - dTempsPasse);
       iPourcentageEffectuePrecedent = iPourcentageEffectue;
-      message.str("");
-      message << "Median smoothing progress: " << iPourcentageEffectue << "% - minimum remaining time: " << (iTempsRestant / 60) << "m " << (iTempsRestant % 60) << "s";
+      std::stringstream message;
+      message << "\rMedian smoothing progress: " << iPourcentageEffectue << "% - minimum remaining time: " << (iTempsRestant / 60) << "m " << (iTempsRestant % 60) << "s";
+      // if(updateProgress != NULL)
+      //   updateProgress(iPourcentageEffectue, message.str());
       if(updateProgress.isNotNull())
         as<Function>(updateProgress)(iPourcentageEffectue, message.str());
-      else
-        Rcpp::Rcout << "\r" << message.str();
+      Rcpp::Rcout << message.str();
     }
     // fin benchmark
   }
 
   // debut benchmark
-  message.str("");
-  message << "Elapsed time median smoothing: " << floor(dTempsTotal / 60) << "m " << ((int)dTempsTotal % 60)<< "s                                                                 ";
-  if(updateProgress.isNotNull())
-    as<Function>(updateProgress)(iPourcentageEffectue, message.str());
-  else
-    Rcpp::Rcout << "\n" << message.str();
+  Rcpp::Rcout << "\rElapsed time median smoothing: " << floor(dTempsTotal / 60) << "m " << ((int)dTempsTotal % 60)<< "s                                                                 ";
   // fin benchmark
   
   return(mValeursMedianes);
