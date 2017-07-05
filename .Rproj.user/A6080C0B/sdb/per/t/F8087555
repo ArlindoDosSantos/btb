@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "Encoding: UTF-8\nPackage: btb\nType: Package\nTitle: Beyond the Border\nVersion: 0.1.14\nDate: 2017-04-03\nAuthor: Thierry Cornely, Laure Genebes, Arlindo Dos Santos, Cynthia Faivre,\n    Auriane Renaud, Farida Marouchi and Francois Semecurbe\nMaintainer: Arlindo Dos Santos <Arlindo.Dos-Santos@insee.fr>\nDescription: Kernel density estimation dedicated to urban geography.\nSuggests:\n    rgdal,\n    rgeos\nLicense: GPL (>= 2)\nImports:\n    methods,\n    Rcpp (>= 0.11.3),\n    sp\nLinkingTo: Rcpp\nNeedsCompilation: yes\nPackaged: 2017-04-03 16:00:00 UTC; S3QCEA\nRoxygenNote: 5.0.1\n",
+    "created" : 1491230142304.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "67656638",
+    "id" : "F8087555",
+    "lastKnownWriteTime" : 1491230303,
+    "last_content_update" : 1491230303960,
+    "path" : "D:/programmation/R/btb/DESCRIPTION",
+    "project_path" : "DESCRIPTION",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "dcf"
+}

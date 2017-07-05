@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#include <R.h>\n#include <Rinternals.h>\n#include <stdlib.h> // for NULL\n#include <R_ext/Rdynload.h>\n\n/* FIXME: \nCheck these declarations against the C/Fortran source code.\n*/\n\n/* .Call calls */\nextern SEXP btb_calculeQuantiles(SEXP, SEXP, SEXP);\nextern SEXP btb_rcppLissage(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);\nextern SEXP btb_rcppLissageMedianSort(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);\n\nstatic const R_CallMethodDef CallEntries[] = {\n  {\"btb_calculeQuantiles\",      (DL_FUNC) &btb_calculeQuantiles,       3},\n  {\"btb_rcppLissage\",           (DL_FUNC) &btb_rcppLissage,           13},\n  {\"btb_rcppLissageMedianSort\", (DL_FUNC) &btb_rcppLissageMedianSort,  8},\n  {NULL, NULL, 0}\n};\n\nvoid R_init_btb(DllInfo *dll)\n{\n  R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);\n  R_useDynamicSymbols(dll, FALSE);\n}",
+    "created" : 1491224636832.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1922507260",
+    "id" : "FA102306",
+    "lastKnownWriteTime" : 1491224676,
+    "last_content_update" : 1491224676815,
+    "path" : "D:/programmation/R/btb/src/init.c",
+    "project_path" : "src/init.c",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "c"
+}

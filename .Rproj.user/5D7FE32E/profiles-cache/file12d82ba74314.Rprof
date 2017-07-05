@@ -1,0 +1,3 @@
+memory profiling: GC profiling: line profiling: sample.interval=10000
+#File 1: <expr>
+:556217:103161445:50857632:518:"assignClassDef" "setIs" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "try" "is" "setClass" 1#10 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 

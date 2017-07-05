@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#################\n#PRETRAITEMENTS #\n#################\n\nlibrary(RSQLite)\n\nsetwd(\"V:/PSAR-AU/AR/ALICE/2_lissage/data_filo2013\") #repertoire de travail\n\nnomSource <- \"filosofi\"\nmillesime <- \"2013\"\n\nliste_region <- c(\"02\",\"04\",\"11\",\"24\",\"27\",\"28\",\"32\",\"44\",\"52\",\"53\",\"75\",\"76\",\"84\",\"93\",\"94\")\nlisteNomRegions <- c(\"Martinique\",\"LaReunion\",\"IleDeFrance\", \"CentreValDeLoire\", \"BourgogneFrancheComte\", \"Normandie\", \"HautsDeFrance\", \"GrandEst\", \"PaysDeLaLoire\", \"Bretagne\", \"NouvelleAquitaine\", \"Occitanie\", \"AuvergneRhoneAlpes\", \"ProvenceAlpesCoteAzur\", \"Corse\")\n\nload(file = \"V:/PSAR-AU/AR/ALICE/1_preparation_base/data/filo_2013.Rdata\")\n\nfor (i in 1:length(liste_region))\n{\n  region <- liste_region[i]\n  basereg <- filo[filo$REG16 == region,]\n  xmin <- min(basereg$x) - 50000\n  xmax <- max(basereg$x) + 50000\n  ymin <- min(basereg$y) - 50000\n  ymax <- max(basereg$y) + 50000\n  \n  base <- filo[filo$x >= xmin & filo$x <= xmax & filo$y >= ymin & filo$y <= ymax,]\n  base <- base[base$nivviem >= 0 & base$revdecm >= 0 & base$revdispm >= 0, ]\n  \n  #calcul revenu * population\n  base$niv_x_pop <- base$nivviem * base$pop\n  base$dis_x_pop <- base$revdispm * base$pop\n  base$dec_x_pop <- base$revdecm * base$pop\n  \n  #exclusion des variables pas a lisser\n  pourliss <- base[,!names(base) %in% c(\"REG16\", \"depcom\", \"nivviem\", \"revdispm\", \"revdecm\")]\n  \n  #conversion en integer de toutes les colonnes\n  pourliss <- as.data.frame(lapply(pourliss, as.integer))\n  \n  # ajout de la colonne nbObsLisse\n  pourliss$nbObsLisse <- 1\n  \n  # sauvegarde RData\n  chemin <- paste0(\"RData/\", listeNomRegions[i], \"/\", nomSource)\n  dir.create(chemin, recursive = TRUE)\n  save(pourliss, file = paste0(chemin, \"/\", millesime, \".Rdata\"))\n  \n  # sauvegarde SQLite\n  chemin <- paste0(\"SQLite/\", listeNomRegions[i], \"/\", nomSource)\n  dir.create(chemin, recursive = TRUE)\n  nomTable <- paste0(listeNomRegions[i], nomSource, millesime)\n  sqlite <- DBI::dbDriver(\"SQLite\")\n  cnxBDD <- DBI::dbConnect(sqlite, paste0(chemin, \"/\", millesime, \".db\"))\n  dbWriteTable(cnxBDD, paste0(listeNomRegions[i], nomTable), pourliss, overwrite = TRUE)\n  DBI::dbDisconnect(cnxBDD)\n  \n  #suppressions des dataframe temporaires\n  rm(pourliss)\n  rm(base)\n  rm(basereg)\n}\n\n\n#tests sur les DOM\ntest <- get(load(file=\"V:/PSAR-AU/AR/ALICE/2_lissage/data_filo2013/RData/LaReunion/filosofi/2013.Rdata\"))\nmartinique = filo[filo$REG16==\"02\",]\n",
+    "created" : 1499244492287.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4127759897",
+    "id" : "11A3FF14",
+    "lastKnownWriteTime" : 1489048080,
+    "last_content_update" : 1489048080,
+    "path" : "D:/S3QCEA/programmation/R/ALICE/preparationBases/filosofi/pretraitements_regions_filo2013.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

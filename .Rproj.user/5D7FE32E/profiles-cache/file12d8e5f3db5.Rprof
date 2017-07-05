@@ -1,0 +1,6 @@
+memory profiling: GC profiling: line profiling: sample.interval=10000
+#File 1: <expr>
+:505432:866732:44822904:360:"<Anonymous>" "setIs" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "try" "is" "setClass" 1#10 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 
+:511789:1113276:47255880:715:"anyDuplicated" "[<-.data.frame" "[<-" "btb::kernelSmoothing" 1#356 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 
+:514372:2167833:47716480:391:"btb::kernelSmoothing" 1#356 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 
+:514826:2618229:47837104:101:".Call" "rcppLissage" "btb::kernelSmoothing" 1#356 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 

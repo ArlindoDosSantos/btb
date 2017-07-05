@@ -1,0 +1,3 @@
+memory profiling: GC profiling: line profiling: sample.interval=10000
+#File 1: <expr>
+:556091:103160342:50807064:500:"as.function" "body<-" "body<-" ".S3Extends" "completeExtends" "setIs" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "try" "is" "setClass" 1#10 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 

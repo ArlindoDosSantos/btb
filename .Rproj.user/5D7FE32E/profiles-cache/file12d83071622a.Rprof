@@ -1,0 +1,10 @@
+memory profiling: GC profiling: line profiling: sample.interval=10000
+#File 1: <expr>
+:509976:1104618:45304616:369:"getGeneric" ".removePreviousCoerce" "setIs" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "try" "is" "setClass" 1#10 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 
+:516664:1400428:47761728:744:"match.fun" "vapply" "order" "[<-.data.frame" 1#239 "[<-" 1#239 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 
+:528425:1567767:50807400:1320:"findCenvVar" "findVar" "cmpSym" "cmp" "genCode" "cb$putconst" "cmpCallArgs" "cmpCallSymFun" "cmpCall" "cmp" "cmpPrim2" "h" "tryInline" "cmpCall" "cmp" "cmpPrim2" "h" "tryInline" "cmpCall" "cmp" "cmpPrim2" "h" "tryInline" "cmpCall" "cmp" "cmpSubsetDispatch" "h" "tryInline" "cmpCall" "cmp" "cmpPrim2" "h" "tryInline" "cmpCall" "cmp" "cmpComplexAssign" "h" "tryInline" "cmpCall" "cmp" "h" "tryInline" "cmpCall" "cmp" "cmpForBody" "h" "tryInline" "cmpCall" "cmp" "h" "tryInline" "cmpCall" "cmp" "cmpForBody" "h" "tryInline" "cmpCall" "cmp" "genCode" "compile" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "compiler:::tryCompile" 1#254 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 
+:535443:1901401:52851848:901:1#258 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 
+:535521:2652713:52875480:0:1#258 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 
+:535588:3310111:52896144:0:"<GC>" 1#258 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 
+:505584:2075168:43936144:2:"%/%" "arrayInd" "which" 1#264 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 
+:507049:2779981:44168096:198:1#302 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 

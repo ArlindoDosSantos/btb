@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(DBI)\nlibrary(RSQLite)\n\nsqlite <- DBI::dbDriver(\"SQLite\")\n# cnxBDD <- DBI::dbConnect(sqlite, \"D:/S3QCEA/bases/Corse/filosofi/2013.db\", flags = SQLITE_RO) \ncnxBDD <- DBI::dbConnect(sqlite, \"D:/S3QCEA/bases/IleDeFrance/filosofi/2013.db\", flags = SQLITE_RO) \nvNomTables <- DBI::dbListTables(cnxBDD)\n\nif (!exists(\"vNomTables\"))\n  DBI::dbDisconnect(cnxBDD)\n\nif (length(vNomTables) != 1)\n  DBI::dbDisconnect(cnxBDD)\n\nsRequete <- paste(\"select * from \", vNomTables[1])\n\ndfBase <- DBI::dbGetQuery(cnxBDD, sRequete)\nDBI::dbDisconnect(cnxBDD)\n\n\n\nbtb::smoothingToGrid(grid = dfResultat, epsg = \"2154\")\n\n\nlibrary(cartography)\ncartography::choroLayer(grille, var = \"pop\", nclass = 5, method = \"fisher-jenks\", border = NA)\n",
+    "created" : 1499155880437.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "1385962492",
+    "id" : "1205A2A",
+    "lastKnownWriteTime" : 2,
+    "last_content_update" : 1499165952493,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

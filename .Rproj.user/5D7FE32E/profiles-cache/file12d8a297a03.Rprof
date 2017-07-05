@@ -1,0 +1,3 @@
+memory profiling: GC profiling: line profiling: sample.interval=10000
+#File 1: <expr>
+:499664:803800:44441432:402:".getClassesFromCache" "getClassDef" "getClass" "<Anonymous>" ".combineExtends" ".transitiveExtends" ".walkClassGraph" "completeExtends" "setIs" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "try" "is" "setClass" 1#10 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis" 

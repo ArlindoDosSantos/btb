@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "grid <- smoothingToGrid(reunionSmooth, \"32740\")\n\n# preview (Apercu)\nlibrary(sp)\nlibrary(cartography)\ncartography::choroLayer(grid, var = \"houhold\", nclass = 5\n                        , method = \"fisher-jenks\", border = NA)\n\n# Export of the basemap in shapefile format (Export du fond de carte au format shapefile)\nlibrary(rgdal)\nrgdal::writeOGR(grid, \"reunion.shp\", \"reunion\", driver = \"ESRI Shapefile\")\n",
+    "created" : 1491230713688.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "843746094",
+    "id" : "63A738BF",
+    "lastKnownWriteTime" : 29555302059016308,
+    "last_content_update" : 1491230775525,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
