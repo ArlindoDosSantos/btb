@@ -364,4 +364,3 @@ kernelSmoothing <-
       return(new(Class = "Grid", dfResultat, cellSize = cellSize, bandwidth = bandwidth))
     }
   }
-
