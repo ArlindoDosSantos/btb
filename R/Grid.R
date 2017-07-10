@@ -121,8 +121,7 @@ smoothingToGrid <- function(grid, epsg, fUpdateProgress = NULL)
       if (i == n)
       {# traitement du dernier polygone
         dTempsPasse = Sys.time() - startTime
-        message <- paste0("\rGrid progress: ", ceiling(i / n * 100), "% - Elapsed time: ", floor(as.numeric(dTempsPasse, units = "mins") / 60), "m ", floor(as.numeric(dTempsPasse, units = "secs")) %% 60, "s   ")
-        cat(message)
+        message <- paste0("Grid progress: ", ceiling(i / n * 100), "% - Elapsed time: ", floor(as.numeric(dTempsPasse, units = "mins") / 60), "m ", floor(as.numeric(dTempsPasse, units = "secs")) %% 60, "s   ")
         fUpdateProgress(100, message)
       }
       else if (i %% floor( n / 100) == 0)
@@ -131,8 +130,7 @@ smoothingToGrid <- function(grid, epsg, fUpdateProgress = NULL)
         dTempsPasse = Sys.time() - startTime
         dTempsTotal <- dTempsPasse * 100 / iPourcentageEffectue;
         iTempsRestant <- ceiling(dTempsTotal - dTempsPasse);
-        message <- paste0("\rGrid progress: ", iPourcentageEffectue, "% - remaining time: ", floor(as.numeric(iTempsRestant, units = "mins") / 60), "m ", as.numeric(iTempsRestant, units = "secs") %% 60, "s   ")
-        cat(message)
+        message <- paste0("Grid progress: ", iPourcentageEffectue, "% - remaining time: ", floor(as.numeric(iTempsRestant, units = "mins") / 60), "m ", as.numeric(iTempsRestant, units = "secs") %% 60, "s   ")
         fUpdateProgress(iPourcentageEffectue, message)
       }
       
@@ -146,10 +144,8 @@ smoothingToGrid <- function(grid, epsg, fUpdateProgress = NULL)
       )
     }
     
-    cat("\n")
     dateDebutTraitement <- Sys.time()
     grille <- lapply(1:nrow(grid), carreauSlow, grid, length(grid@.Data[[1]]), fUpdateProgress, dateDebutTraitement)
-    cat("\n")
   }
 
   # on crée un spatial polygon avec un code epsg de projection defini
@@ -240,8 +236,8 @@ kernelSmoothing <-
     if (is.null(dfCentroids))
     { 
       # calcul de l'indice des observations - on prend le rectangle englobant et on positionne le debut de la numérotation sur la première observation
-      dfObservations$i <- as.integer(floor((dfObservations$x - xOffset[1]) / cellSize) - floor(min(dfObservations$x / cellSize)) + 1)
-      dfObservations$j <- as.integer(floor((dfObservations$y - yOffset[1]) / cellSize) - floor(min(dfObservations$y / cellSize)) + 1)
+      dfObservations[, "i"] <- as.integer(floor((dfObservations$x - xOffset[1]) / cellSize) - floor(min(dfObservations$x / cellSize)) + 1)
+      dfObservations[, "j"] <- as.integer(floor((dfObservations$y - yOffset[1]) / cellSize) - floor(min(dfObservations$y / cellSize)) + 1)
       
       # calcul des centroides
       dfCentroids <- data.frame( x = as.integer(floor(dfObservations$x / cellSize) * cellSize + (cellSize / 2)),
@@ -285,12 +281,12 @@ kernelSmoothing <-
       indiceMinX <- floor(min(obsEtCentroides$x / cellSize))
       indiceMinY <- floor(min(obsEtCentroides$y / cellSize))
         
-      dfObservations$i <- as.integer(floor((dfObservations$x - xOffset[1]) / cellSize) - indiceMinX + 1)
-      dfObservations$j <- as.integer(floor((dfObservations$y - yOffset[1]) / cellSize) - indiceMinY + 1)
+      dfObservations[, "i"] <- as.integer(floor((dfObservations$x - xOffset[1]) / cellSize) - indiceMinX + 1)
+      dfObservations[, "j"] <- as.integer(floor((dfObservations$y - yOffset[1]) / cellSize) - indiceMinY + 1)
       
       # calcul de l'indice des centroides
-      dfCentroids$i <- as.integer(floor(dfCentroids$x / cellSize) - indiceMinX + 1)
-      dfCentroids$j <- as.integer(floor(dfCentroids$y / cellSize) - indiceMinY + 1)
+      dfCentroids[, "i"] <- as.integer(floor(dfCentroids$x / cellSize) - indiceMinX + 1)
+      dfCentroids[, "j"] <- as.integer(floor(dfCentroids$y / cellSize) - indiceMinY + 1)
       dfCentroidesUniques <- dfCentroids
     }
       
@@ -300,7 +296,7 @@ kernelSmoothing <-
     if (is.null(vQuantiles))
     {
       # numérotation des centroides - décalage de -1 pour faire commencer la numerotation des lignes à 0 pour le traitement c++
-      dfCentroidesUniques$index <- (1:nrow(dfCentroidesUniques)) - 1L
+      dfCentroidesUniques[, "index"] <- (1:nrow(dfCentroidesUniques)) - 1L
       
       # transformation en matrice
       mXcentroides = mIcentroides = mYcentroides = matrix(NA, max(dfCentroidesUniques$j), max(dfCentroidesUniques$i))

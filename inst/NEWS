@@ -1,3 +1,6 @@
+0.1.15
+  o improvement: verbose output to console only if fUpdateProgress is not provided. (if provided, the output is managed by the calling function)
+  o improvement: use of left-value [, "var"] instead of $var
 0.1.13
   o bug fixed: upper boundary of loop for was underestimated when bandwidth > neighbor * cellSize
   o bug fixed: the offset was wrong when dfCendroids was provided
