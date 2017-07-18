@@ -94,7 +94,7 @@ setMethod(
 #' @export
 smoothingToGrid <- function(grid, epsg, fUpdateProgress = NULL)
 {
-
+  
   if (is.null(fUpdateProgress))
   {
     # version optimisee sans compte-rendu d'avancement du traitement
@@ -135,25 +135,25 @@ smoothingToGrid <- function(grid, epsg, fUpdateProgress = NULL)
       }
       
       sp::Polygons(list(sp::Polygon(
-            cbind(
-              c(0, grid@cellSize, grid@cellSize, 0, 0) + x - grid@cellSize / 2,
-              c(0, 0, grid@cellSize, grid@cellSize, 0) + y - grid@cellSize / 2
-            )
-          )
-        ), paste(x, y, sep = "_")
+        cbind(
+          c(0, grid@cellSize, grid@cellSize, 0, 0) + x - grid@cellSize / 2,
+          c(0, 0, grid@cellSize, grid@cellSize, 0) + y - grid@cellSize / 2
+        )
+      )
+      ), paste(x, y, sep = "_")
       )
     }
     
     dateDebutTraitement <- Sys.time()
     grille <- lapply(1:nrow(grid), carreauSlow, grid, length(grid@.Data[[1]]), fUpdateProgress, dateDebutTraitement)
   }
-
+  
   # on crée un spatial polygon avec un code epsg de projection defini
   grille_spat <- sp::SpatialPolygons((grille), proj4string = sp::CRS(paste0("+init=epsg:", epsg)))
   df <- data.frame(grid@.Data)
   names(df) <- names(grid)
   data <- data.frame(ID = paste(df[, "x"], df[, "y"], sep = "_"), df)
-
+  
   # un SpatialPolygonsDataFrame est un SpatialPolygon auquel on attache une table d'attributs
   return(sp::SpatialPolygonsDataFrame(grille_spat, data, match.ID = "ID"))
 }
@@ -177,12 +177,12 @@ smoothingToGrid <- function(grid, epsg, fUpdateProgress = NULL)
 #' @export
 kernelSmoothing <-
   function(dfObservations
-          , cellSize
-          , bandwidth
-          , vQuantiles = NULL
-          , dfCentroids = NULL
-          , fUpdateProgress = NULL
-          , neighbor = NULL
+           , cellSize
+           , bandwidth
+           , vQuantiles = NULL
+           , dfCentroids = NULL
+           , fUpdateProgress = NULL
+           , neighbor = NULL
   )
   {
     cellSize <- as.integer(cellSize)
@@ -227,7 +227,7 @@ kernelSmoothing <-
       xOffset <- 0
       yOffset <- 0
     }
-
+    
     if (anyNA(dfObservations) )
     {
       warning("Be careful! NA values detected in your observations")
@@ -243,7 +243,7 @@ kernelSmoothing <-
       dfCentroids <- data.frame( x = as.integer(floor(dfObservations$x / cellSize) * cellSize + (cellSize / 2)),
                                  y = as.integer(floor(dfObservations$y / cellSize) * cellSize + (cellSize / 2))
       )
-
+      
       # les observations sont positionnées sur une matrice. mIndices[i, j] == 1 indique qu'il y a au moins 1 observation pour le carreau (i,j)
       mIndices <- matrix(0L, max(dfObservations$i), max(dfObservations$j))
       mIndices[cbind(dfObservations$i, dfObservations$j)] <- 1L
@@ -280,7 +280,7 @@ kernelSmoothing <-
       obsEtCentroides <- data.frame(x = c(dfObservations$x, dfCentroids$x), y = c(dfObservations$y, dfCentroids$y))
       indiceMinX <- floor(min(obsEtCentroides$x / cellSize))
       indiceMinY <- floor(min(obsEtCentroides$y / cellSize))
-        
+      
       dfObservations[, "i"] <- as.integer(floor((dfObservations$x - xOffset[1]) / cellSize) - indiceMinX + 1)
       dfObservations[, "j"] <- as.integer(floor((dfObservations$y - yOffset[1]) / cellSize) - indiceMinY + 1)
       
@@ -289,7 +289,7 @@ kernelSmoothing <-
       dfCentroids[, "j"] <- as.integer(floor(dfCentroids$y / cellSize) - indiceMinY + 1)
       dfCentroidesUniques <- dfCentroids
     }
-      
+    
     nomColonnes <- colnames(dfObservations)
     listVar <- nomColonnes[nomColonnes != "x" & nomColonnes != "y" & nomColonnes != "i" & nomColonnes != "j"]
     
@@ -308,7 +308,7 @@ kernelSmoothing <-
       dfResultat <- data.frame(dfCentroidesUniques[, c("x", "y")])
       
       mVariablesLissees <- rcppLissage(
-          dfObservations$x
+        dfObservations$x
         , dfObservations$y
         , dfObservations$i
         , dfObservations$j
@@ -335,7 +335,7 @@ kernelSmoothing <-
     }else
     {
       mMedianes <- rcppLissageMedianSort(
-          dfObservations$x
+        dfObservations$x
         , dfObservations$y
         , bandwidth
         , as.matrix(dfObservations[, listVar])
@@ -344,7 +344,7 @@ kernelSmoothing <-
         , vQuantiles
         , fUpdateProgress
       )
-    
+      
       rm(dfObservations)
       
       dfResultat <- data.frame(cbind(dfCentroidesUniques$x, dfCentroidesUniques$y))

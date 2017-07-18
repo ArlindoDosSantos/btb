@@ -2,14 +2,14 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 rcppLissage <- function(vXobservations, vYobservations, vIndicesX, vIndicesY, iPas, iRayon, iNeighbor, mVar, mXcentroides, mYcentroides, mIcentroides, iNbCentroides, updateProgress = NULL) {
-    .Call('btb_rcppLissage', PACKAGE = 'btb', vXobservations, vYobservations, vIndicesX, vIndicesY, iPas, iRayon, iNeighbor, mVar, mXcentroides, mYcentroides, mIcentroides, iNbCentroides, updateProgress)
+    .Call(btb_rcppLissage, vXobservations, vYobservations, vIndicesX, vIndicesY, iPas, iRayon, iNeighbor, mVar, mXcentroides, mYcentroides, mIcentroides, iNbCentroides, updateProgress)
 }
 
 calculeQuantiles <- function(vModalites, vPonderation, vQuantiles) {
-    .Call('btb_calculeQuantiles', PACKAGE = 'btb', vModalites, vPonderation, vQuantiles)
+    .Call(btb_calculeQuantiles, vModalites, vPonderation, vQuantiles)
 }
 
 rcppLissageMedianSort <- function(vXobservations, vYobservations, iRayon, mVar, vXCentroides, vYCentroides, vQuantiles, updateProgress = NULL) {
-    .Call('btb_rcppLissageMedianSort', PACKAGE = 'btb', vXobservations, vYobservations, iRayon, mVar, vXCentroides, vYCentroides, vQuantiles, updateProgress)
+    .Call(btb_rcppLissageMedianSort, vXobservations, vYobservations, iRayon, mVar, vXCentroides, vYCentroides, vQuantiles, updateProgress)
 }
 

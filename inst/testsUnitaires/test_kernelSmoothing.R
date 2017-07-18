@@ -1,4 +1,5 @@
 library(RUnit)
+library(data.table)
 Rcpp::sourceCpp('btb/src/rcppLissage.cpp')
 
 test.kernelSmoothing <- function()
@@ -11,7 +12,7 @@ test.kernelSmoothing <- function()
   
   iPas <- 20
   iRayon <- 41
-  dfObservations <- data.frame(x = c(22, 35), y = c(70, 55), V1 = c(10, 13))
+  dfObservations <- data.table(x = c(22, 35), y = c(70, 55), V1 = c(10, 13))
   
   # automatic grid
   # Call mode 1
@@ -23,7 +24,7 @@ test.kernelSmoothing <- function()
   vYCentroides <- rep(seq(from = 30, to = 90, by = iPas), each = 3)
   dfCentroides <- data.frame(cbind(x = vXCentroides, y = vYCentroides))
   dfLisse <- kernelSmoothing(dfObservations, iPas, iRayon, dfCentroids = dfCentroides)
-  dfLisse <- dfLisse[dfLisse$V1 > 0, ]
+  # dfLisse <- dfLisse[dfLisse$V1 > 0, ]
   checkEqualsNumeric(lResultatAttendu[[3]], dfLisse@.Data[[3]], tolerance = 2e-8)
   
   # user grid
